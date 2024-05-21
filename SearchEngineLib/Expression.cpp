@@ -12,7 +12,6 @@ Expression::ResultTy& Expression::operator*() {
 }
 
 Expression& Expression::operator|=(const Expression& other) {
-    std::cout << "|-ing expression\n";
     for (int i = 0; i < other.exprResult_.size(); ++i) {
         exprResult_.push_back(other.exprResult_[i]);
     }
@@ -24,7 +23,6 @@ Expression& Expression::operator&=(const Expression& other) {
     int i = 0;
     int j = 0;
     ResultTy result;
-    std::cout << "&-ing expressions\n";
     while (i < exprResult_.size() && j < other.exprResult_.size()) {
         if (exprResult_[i] == other.exprResult_[j]) {
             result.push_back(exprResult_[i]);

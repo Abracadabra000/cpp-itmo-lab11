@@ -9,7 +9,11 @@ public:
     SearchProcessor(const fs::path& indexP) :
         indexPath_{indexP},
         buffer{new char[kBufferSize]}
-    {}
+    {
+        if (!fs::exists(indexP)) {
+            throw no_index_file_found{};
+        }
+    }
 
     ~SearchProcessor() {
         delete buffer;

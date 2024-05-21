@@ -19,7 +19,6 @@ int FileInverter::InvertFile(const fs::path& targetP, int fileIndex) {
         ind = 0;
         while (ind < blockSize) {
             while (ind < blockSize && isLetter(buffer[ind])) {
-            std::cout << buffer[ind] << " " << ind << "\n";
                 curWord += buffer[ind];
                 ++ind;
                 if (buffer[ind] == '\n') {
@@ -43,12 +42,13 @@ int FileInverter::InvertFile(const fs::path& targetP, int fileIndex) {
             int jump = kInitialJump;
             while (hash_table_[h].index_ != 0 && hash_table_[h].word_ != curWord) {
                 h += jump * jump;
+                h %= kExpandedHashBase;
                 ++jump;
+                jump %= kExpandedHashBase;
             }
             if (hash_table_[h].index_ == 0) {
                 throw bad_hash_calculation_error{};
             }
-            std::cout << curWord << " " << fileIndex << " " << curLine << "\n";
             from_int_to_char(writeBuffer, curLine);
             from_int_to_char(writeBuffer + kIntSize, fileIndex);
             indexFile_.seekp(hash_table_[h].index_, std::ios::beg);

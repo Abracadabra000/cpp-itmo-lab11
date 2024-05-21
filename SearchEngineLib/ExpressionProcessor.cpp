@@ -8,12 +8,10 @@ ExprProcessor::ExprProcessor(const fs::path& indexP) :
         indexPath_{indexP},
         documentScores_{}
 {
-    std::cout << "here\n";
     std::ifstream indexFile{indexP, std::ios::binary};
     char* buffer = new char[kBufferSize];
     indexFile.read(buffer, kIntSize * 3);
     docNumber_ = from_char_to_int(buffer);
-    std::cout << docNumber_ << "\n";
     documentScores_ = std::vector<double>(docNumber_, 0);
     int docSize = from_char_to_int(buffer + 2 * kIntSize);
     avgDocLength_ = docSize / docNumber_;
@@ -50,14 +48,10 @@ void ExprProcessor::FindString(const std::string& stringExpression,
         word += stringExpression[position];
         ++position;
     }
-    if (word == "") {
-        std::cout << "missing word " << position << "\n";
-    }
     int wordMentions = 0;
     int lastDoc = -1;
     WordScore localScore = reader.FindWord(*dumpExpr, word);
     for (auto i : localScore) {
-        std::cout << "here\n";
         if (i.document_ != lastDoc) {
             ++wordMentions;
         }
@@ -71,7 +65,6 @@ void ExprProcessor::FindString(const std::string& stringExpression,
             lastDoc = i.document_;
             continue;
         }
-        std::cout << i.document_ << "\n";
         documentScores_[i.document_] +=
         IDF(docNumber_, wordMentions) *
         ScorePartFunction(freq, avgDocLength_, documentSizes_[i.document_]);

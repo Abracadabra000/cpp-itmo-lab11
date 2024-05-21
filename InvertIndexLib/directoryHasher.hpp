@@ -11,8 +11,9 @@ namespace invindex
 class DirectoryHasher {
 public:
 
-    DirectoryHasher(const fs::path& dirP):
+    DirectoryHasher(const fs::path& dirP, const std::vector<std::string>& ignore):
         dirPath_{dirP},
+        ignoreList_{ignore},
         hash_list_{},
         hash_table_{kExpandedHashBase}
     {}
@@ -30,6 +31,7 @@ public:
 
     std::list<long long> hash_list_;
     std::vector<WordData> hash_table_;
+    std::vector<std::string> ignoreList_;
     fs::path dirPath_;
 };
 }

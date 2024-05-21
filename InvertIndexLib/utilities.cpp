@@ -36,7 +36,9 @@ bool isLetter(char c) {
         return false;
     }
     if (c == '\n' || c == '\t') {
-        std::cout << "shift\n";
+        return false;
+    }
+    if (c == ':') {
         return false;
     }
     return true;

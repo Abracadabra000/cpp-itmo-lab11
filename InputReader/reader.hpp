@@ -12,7 +12,11 @@ public:
 
     std::string FindValue(const std::string& command);
 
+    std::vector<std::string> FindMultivalue(const std::string& command);
+
     bool FindFlag(const std::string& command);
+
+    bool FindShortFlag(const std::string& command);
 
     std::string FindPositional();
 

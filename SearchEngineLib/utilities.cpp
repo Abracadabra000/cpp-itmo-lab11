@@ -22,13 +22,11 @@ std::string from_char_to_string(char* data, int size) {
 }
 
 bool AreSame(char* data, int size, const std::string& s) {
-    // std::cout << s << " saming\n";
     if (size != s.size()) {
         return false;
     }
     for (int i = 0; i < size; ++i) {
         if (data[i] != s[i]) {
-            // std::cout << "->" << data[i] << "<-\n";
             return false;
         }
     }

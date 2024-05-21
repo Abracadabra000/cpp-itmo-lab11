@@ -8,7 +8,6 @@ void Reader::Read(int argc, char**argv) {
             buffer += argv[i][j];
             ++j;
         }
-        std::cout << buffer << "\n";
         input_.push_back(buffer);
         buffer = "";
     }
@@ -45,8 +44,37 @@ std::string Reader::FindValue(const std::string& rawCommand) {
     return result;
 }
 
+std::vector<std::string> Reader::FindMultivalue(const std::string& rawCommand) {
+    std::string command = "--" + rawCommand;
+    int i;
+    std::vector<std::string> result;
+    for (i = 0; i < input_.size(); ++i) {
+        if (input_[i] == command) {
+            ++i;
+            break;
+        }
+    }
+    for (i; i < input_.size(); ++i) {
+        if (input_[i].size() >= 2 && input_[i][0] == '-' && input_[i][1] == '-') {
+            break;
+        }
+        result.push_back(input_[i]);
+    }
+    return result;
+}
+
 bool Reader::FindFlag(const std::string& rawCommand) {
     std::string command = "--" + rawCommand;
+    for (const auto& s : input_) {
+        if (s == command) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Reader::FindShortFlag(const std::string& rawCommand) {
+    std::string command = "-" + rawCommand;
     for (const auto& s : input_) {
         if (s == command) {
             return true;

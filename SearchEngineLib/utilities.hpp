@@ -65,4 +65,11 @@ public:
     }
 };
 
+class no_index_file_found : std::exception {
+public:
+    const char* what() const noexcept override {
+        return "ERROR! No invert index file found in this directory. Use \'MakeIndex.exe\' to make one.\n";
+    }
+};
+
 }

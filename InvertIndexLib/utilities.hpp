@@ -45,4 +45,20 @@ public:
     }
 };
 
+class invert_index_file_overwrite_error : std::exception {
+public:
+    const char* what() const noexcept override {
+        return "ERROR! File named \'dirind.inv\' already exists. Use \'--override\' or \'-ov\' to override existing file.\n";
+    }
+};
+
+class cannot_find_directory_error : std::exception {
+public:
+    const char* what() const noexcept override {
+        return "ERROR! Target directory doesnt exist.\n";
+    }
+};
+
+
+
 }

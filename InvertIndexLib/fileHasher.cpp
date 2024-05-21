@@ -18,7 +18,6 @@ FileHashGenerator::~FileHashGenerator() {
 void FileHashGenerator::HashFile() {
     std::string curWord = "";
     uint64_t bytesLeft = fs::file_size(filePath);
-    std::cout << bytesLeft << "\n";
     uint64_t blockSize;
     int ind = 0;
     while (targetFile.good() && bytesLeft > 0) {
@@ -31,10 +30,10 @@ void FileHashGenerator::HashFile() {
                 curWord += buffer[ind];
                 ++ind;
             }
-            if (buffer[ind] == '\n') {
+            if (ind < blockSize && buffer[ind] == '\n') {
                 --blockSize;
             }
-            if (!isLetter(buffer[ind])) {
+            if (ind < blockSize && !isLetter(buffer[ind])) {
                 ++ind;
             }
             if (curWord == "") {
@@ -47,7 +46,9 @@ void FileHashGenerator::HashFile() {
             int jump = kInitialJump;
             while (hash_table[h].amount_ != 0 && hash_table[h].word_ != curWord) {
                 h += jump * jump;
+                h %= kHashBase;
                 ++jump;
+                jump %= kHashBase;
             }
             if (hash_table[h].amount_ == 0) {
                 hash_list.push_back(h);

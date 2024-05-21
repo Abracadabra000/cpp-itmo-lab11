@@ -13,14 +13,30 @@ void DirectoryInverter::WriteFileNames() {
     indexFile_.seekp(0, std::ios::beg);
     indexFile_.write(writeBuffer, kIntSize * 3);
     int docAmount = 0;
+    bool isIgnoredFile;
     for (const auto& dir_entry : fs::recursive_directory_iterator(dirPath_)) {
-        std::cout << dir_entry.path() << "\n";
+        isIgnoredFile = false;
+        for (const auto& name : ignoreList_) {
+            for (const auto& dir : dir_entry.path()) {
+                if (dir == name) {
+                    isIgnoredFile = true;
+                    break;
+                }
+            }
+            if (isIgnoredFile) {
+                break;
+            }
+        }
+        if (isIgnoredFile) {
+            continue;
+        }
         if (fs::is_directory(dir_entry.path())) {
             continue;
         }
-        if (dir_entry.path() == dirPath_ / kInvertIndexFileName) {
+        if (dir_entry.path().filename() == kInvertIndexFileName) {
             continue;
         }
+        std::cout << "Writing names from " << dir_entry.path() << "\n";
         ++docAmount;
         name = fs::relative(dir_entry.path(), dirPath_).generic_string();
         int size = name.size();
@@ -32,11 +48,9 @@ void DirectoryInverter::WriteFileNames() {
         documentSizeInfoPosition_.push_back(indexFile_.tellp());
         indexFile_.write(writeBuffer + 2 * kIntSize, kIntSize + size);
         namesLen += kIntSize * 3 + size;
-        std::cout << "size: " << size << "\n";
         ++num;
     }
     indexFile_.seekp(0, std::ios::beg);
-    std::cout << namesLen << "\n";
     from_int_to_char(writeBuffer, docAmount);
     from_int_to_char(writeBuffer + kIntSize, namesLen);
     indexFile_.write(writeBuffer, kIntSize * 2);
@@ -45,7 +59,7 @@ void DirectoryInverter::WriteFileNames() {
 
 void DirectoryInverter::WriteHashes() {
     std::cout << "Calculating hash...\n";
-    DirectoryHasher hasher{dirPath_};
+    DirectoryHasher hasher{dirPath_, ignoreList_};
     hasher.HashDirectory();
     std::cout << "Hash done!\n";
     hash_list_ = std::move(hasher.hash_list_);
@@ -79,14 +93,30 @@ void DirectoryInverter::WriteWords() {
     int curFileSize;
     int totalSize = 0;
     std::cout << "Writing words...\n";
+    bool isIgnoredFile;
     for (const auto& dir_entry : fs::recursive_directory_iterator(dirPath_)) {
-        std::cout << dir_entry.path() << "\n";
+        isIgnoredFile = false;
+        for (const auto& name : ignoreList_) {
+            for (const auto& dir : dir_entry.path()) {
+                if (dir == name) {
+                    isIgnoredFile = true;
+                    break;
+                }
+            }
+            if (isIgnoredFile) {
+                break;
+            }
+        }
+        if (isIgnoredFile) {
+            continue;
+        }
         if (dir_entry.path().filename() == kInvertIndexFileName) {
             continue;
         }
         if (fs::is_directory(dir_entry.path())) {
             continue;
         }
+        std::cout << "Writing from " << dir_entry.path() << "\n";
         curFileSize = inverter.InvertFile(dir_entry.path(), num);
         totalSize += curFileSize;
         indexFile_.seekp(documentSizeInfoPosition_[num], std::ios::beg);
