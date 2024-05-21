@@ -4,7 +4,7 @@
 namespace searcheng
 {
 
-void SearchProcessor::Search(const std::string& stringExpr) {
+std::vector<LineMatch> SearchProcessor::Search(const std::string& stringExpr) {
     ExprProcessor proc{indexPath_};
     Expression exprResult = proc.CalculateExpression(stringExpr);
     std::vector<std::string> fileNames;
@@ -29,13 +29,15 @@ void SearchProcessor::Search(const std::string& stringExpr) {
     if ((*exprResult).size() == 0) {
         std::cout << "No matches were found.\n";
     }
+    std::vector<LineMatch> result;
     for (const auto& pos : *exprResult) {
         if (pos == lastPos) {
             continue;
         }
         lastPos = pos;
-        std::cout << fileNames[pos.document_] << ": " << pos.line_ << "\n";
+        result.push_back({fileNames[pos.document_], pos.line_});
     }
+    return result;
 }
 
 }

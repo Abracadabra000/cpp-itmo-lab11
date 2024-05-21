@@ -44,6 +44,10 @@ bool operator==(const WordPosition& lhs, const WordPosition& rhs) {
     return lhs.document_ == rhs.document_ && lhs.line_ == rhs.line_;
 }
 
+bool operator==(const LineMatch& a, const LineMatch& b) {
+    return a.document_ == b.document_ && a.line_ == b.line_;
+}
+
 double IDF(int docAmount, int containingAmount) {
     return std::log((docAmount - containingAmount + kIDFParam) /
                     (containingAmount + kIDFParam) + 1);

@@ -10,6 +10,8 @@ public:
 
     void Read(int argc, char** argv);
 
+    void Read(const std::vector<std::string> inp);
+
     std::string FindValue(const std::string& command);
 
     std::vector<std::string> FindMultivalue(const std::string& command);

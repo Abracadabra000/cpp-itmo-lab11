@@ -13,6 +13,19 @@ void Reader::Read(int argc, char**argv) {
     }
 }
 
+void Reader::Read(const std::vector<std::string> inp) {
+    std::string buffer;
+    for (int i = 1; i < inp.size(); ++i) {
+        int j = 0;
+        while (j < inp[i].size()) {
+            buffer += inp[i][j];
+            ++j;
+        }
+        input_.push_back(buffer);
+        buffer = "";
+    }
+}
+
 std::string Reader::FindValue(const std::string& rawCommand) {
     std::string command = "--" + rawCommand;
     command += '=';

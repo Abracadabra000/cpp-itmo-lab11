@@ -49,6 +49,13 @@ struct ScoreStats {
     double score_;
 };
 
+struct LineMatch {
+    std::string document_;
+    int line_;
+};
+
+bool operator==(const LineMatch& a, const LineMatch& b);
+
 using WordScore = std::vector<RangingStats>;
 
 struct RangeInfo {

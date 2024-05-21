@@ -19,7 +19,10 @@ int main(int argc, char** argv) {
         expression = reader.FindPositional();
         fs::path targetPath{targetDir};
         srch::SearchProcessor searcher(targetPath / srch::kInvertIndexFileName);
-        searcher.Search(expression);
+        std::vector<srch::LineMatch> result = searcher.Search(expression);
+        for (const auto& l : result) {
+            std::cout << l.document_ << ": " << l.line_ << "\n";
+        }
 
     }
     catch (const command_not_found_error& error)

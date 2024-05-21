@@ -8,3 +8,6 @@ add_subdirectory(InvertIndexLib)
 add_subdirectory(SearchEngineLib)
 add_subdirectory(app)
 add_subdirectory(InputReader)
+
+enable_testing()
+add_subdirectory(tests)

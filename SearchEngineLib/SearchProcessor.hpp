@@ -19,7 +19,7 @@ public:
         delete buffer;
     }
 
-    void Search(const std::string& stringExpr);
+    std::vector<LineMatch> Search(const std::string& stringExpr);
 
 private:
 
